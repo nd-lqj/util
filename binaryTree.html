@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <title>由排序数组到二叉树查找</title>
+</head>
+<body>
+    <div>
+        <p>给予一个已经排序好的整数数组, 生成一个相对合理的二叉搜索树。</p>
+        <p>另外：时间复杂度和空间复杂度是多少？</p>
+        <p>创建二叉树的时间复杂度为：O(n)</p>
+        <p>创建二叉树的空间复杂度为：O(n)</p>
+        <p>二叉树查找的时间复杂度为：O(log n)</p>
+    </div>
+    <script>
+        function BinaryTree(list) {
+          this.list = list
+          this.treeRoot = list.length > 0 ? this._buildSubTree(0, list.length - 1) : null
+        }
+        BinaryTree.prototype._buildSubTree = function (start, end) {
+            if (start === end) {
+                return {
+                    index: start
+                }
+            }
+            const index = parseInt((start + end) / 2)
+            return {
+                index,
+                left: (start < index) ? this._buildSubTree(start, index - 1) : null,
+                right: (index < end) ? this._buildSubTree(index + 1, end) : null
+            }
+        }
+        BinaryTree.prototype.indexOf = function (n) {
+            if (typeof n !== 'number' || !this.treeRoot) {
+                return -1
+            }
+            return this._getIndexOf(n, this.treeRoot)
+        }
+        BinaryTree.prototype._getIndexOf = function (n, node) {
+            if (n === this.list[node.index]) {
+                return node.index
+            } else if (n < this.list[node.index]) {
+                return node.left ? this._getIndexOf(n, node.left) : -1
+            } else {
+                return node.right ? this._getIndexOf(n, node.right) : -1
+            }
+        }
+    </script>
+    <script>
+        const intList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        var binaryTree = new BinaryTree(intList)
+
+        console.log('init List:', JSON.stringify(intList))
+        console.log('indexOf -1:', binaryTree.indexOf(-1))
+        console.log('indexOf 0:', binaryTree.indexOf(0))
+        console.log('indexOf 1:', binaryTree.indexOf(1))
+        console.log('indexOf 5:', binaryTree.indexOf(5))
+        console.log('indexOf 9:', binaryTree.indexOf(9))
+        console.log('indexOf 10:', binaryTree.indexOf(10))
+    </script>
+</body>
+</html>
+
